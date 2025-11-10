@@ -79,7 +79,7 @@ export default function LoginPage() {
                   setEmail(e.target.value)
                   setError("")
                 }}
-                placeholder="seu@email.com"
+                placeholder="your@email.com"
                 className="w-full"
                 disabled={isLoading}
               />

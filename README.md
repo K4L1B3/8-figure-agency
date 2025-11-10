@@ -2,7 +2,10 @@
 
 A modern, full-stack task management system built with Next.js, featuring WhatsApp integration through n8n for seamless task management via messaging.
 
-Live demo / App URL: https://8-figure-agency.vercel.app/login
+**Live demo / App URL:** https://8-figure-agency.vercel.app/login
+
+**Chabot in this number:**
+WhatsApp (professional): +55 (81) 98377-2043
 
 ## 🚀 Features
 
