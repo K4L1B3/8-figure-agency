@@ -189,13 +189,13 @@ export default function TodoPage() {
       <div className="max-w-3xl mx-auto space-y-8">
         <div className="flex items-center justify-between">
           <div className="text-sm text-muted-foreground">
-            Logado como: <span className="text-foreground font-medium">{userEmail}</span>
+            logged in as: <span className="text-foreground font-medium">{userEmail}</span>
           </div>
           <button
             onClick={handleLogout}
             className="text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
-            Sair
+            Leave
           </button>
         </div>
 

@@ -18,12 +18,12 @@ export default function LoginPage() {
     // Validate email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!email.trim()) {
-      setError("Por favor, insira seu email")
+      setError("Please, enter your email.")
       return
     }
 
     if (!emailRegex.test(email)) {
-      setError("Por favor, insira um email válido")
+      setError("Please, enter a valid email address.")
       return
     }
 
@@ -36,7 +36,7 @@ export default function LoginPage() {
       })
 
       if (!response.ok) {
-        throw new Error("Falha ao processar login")
+        throw new Error("Login failed to process.")
       }
 
       const user = await response.json()
@@ -48,7 +48,7 @@ export default function LoginPage() {
       // Redirect to todo page
       router.push("/")
     } catch (err) {
-      setError("Erro ao fazer login. Tente novamente.")
+      setError("Error logging in. Please try again.")
       console.error("[v0] Login error:", err)
     } finally {
       setIsLoading(false)
@@ -60,8 +60,8 @@ export default function LoginPage() {
       <div className="w-full max-w-md space-y-8">
         {/* Header */}
         <div className="text-center space-y-2">
-          <h1 className="text-4xl font-bold text-foreground">Bem-vindo</h1>
-          <p className="text-muted-foreground">Identifique-se para acessar suas tarefas</p>
+          <h1 className="text-4xl font-bold text-foreground">Welcome</h1>
+          <p className="text-muted-foreground">Log in to access your tasks.</p>
         </div>
 
         {/* Login Form */}
@@ -91,13 +91,13 @@ export default function LoginPage() {
               disabled={isLoading}
               className="w-full bg-primary text-primary-foreground rounded-lg px-4 py-3 font-medium hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isLoading ? "Carregando..." : "Acessar"}
+              {isLoading ? "loading..." : "Access"}
             </button>
           </form>
         </div>
 
         <p className="text-center text-sm text-muted-foreground">
-          Seus dados são armazenados de forma segura no banco de dados
+          Your data is securely stored in the database.
         </p>
       </div>
     </main>

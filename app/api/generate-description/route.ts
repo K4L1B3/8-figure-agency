@@ -11,30 +11,53 @@ export async function POST(request: Request) {
 
     const { text } = await generateText({
       model: openai("gpt-4o-mini"),
-      prompt: `Você é um assistente que gera descrições de tarefas CURTAS e organizadas para um app de to-do.
+      prompt: `You are an assistant that generates SHORT and organized task descriptions for a to-do app.
+Context:
 
-Contexto:
-- O texto será exibido dentro de um card pequeno.
-- Preciso de uma descrição legível, sem títulos grandes, sem markdown pesado.
-- Nada de ###, nada de **negrito**, nada de texto gigantesco.
 
-Tarefa: "${title}"
+The text will be shown inside a small card.
 
-Formato exato que você deve devolver:
 
-Descrição: frase de 1 linha dizendo o que é a tarefa.
-Passos:
-- passo 1 curto
-- passo 2 curto
-- passo 3 curto
-Observações: se houver algo útil, 1 linha. Se não, escreva "—".
+I need a readable description, no big titles, no heavy markdown.
 
-Regras importantes:
-- Não ultrapasse 120 palavras no total.
-- Use frases curtas.
-- Use somente bullets com "-".
-- Não invente contexto demais.
-- Escreva em português do Brasil.`,
+
+No ###, no bold, no huge text.
+
+
+Task: "${title}"
+Exact format you must return:
+Description: 1-line sentence saying what the task is.
+Steps:
+
+
+short step 1
+
+
+short step 2
+
+
+short step 3
+Notes: if there is something useful, 1 line. If not, write "—".
+
+
+Important rules:
+
+
+Do not exceed 120 words in total.
+
+
+Use short sentences.
+
+
+Use only bullets with "-".
+
+
+Do not invent too much context.
+
+
+Write in English.
+
+`,
       temperature: 0.7,
      maxOutputTokens: 500,
     })
