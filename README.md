@@ -2,6 +2,8 @@
 
 A modern, full-stack task management system built with Next.js, featuring WhatsApp integration through n8n for seamless task management via messaging.
 
+Live demo / App URL: https://8-figure-agency.vercel.app/login
+
 ## 🚀 Features
 
 - ✨ Modern, responsive web interface
@@ -168,6 +170,10 @@ The project includes comprehensive documentation in the `/docs` directory:
   - Message formatting
   - Error handling
   - Integration testing
+
+**n8n Workflow File**
+
+If you want to import the full n8n workflow into your n8n instance, the workflow JSON is included at `docs/n8n_integration/8figure.json` — you can import this file directly in n8n (Menu → Import → Workflow) to load the entire pre-configured flow and nodes.
 
 For detailed technical information about:
 - Setting up the Next.js project and its components, refer to `docs/SETUP.md`

@@ -5,9 +5,13 @@ import type { UpdateTaskDto } from "@/backend/config/types"
 const taskService = new TaskService()
 
 // GET - Get a single task by ID
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(
+  request: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
   try {
-    const task = await taskService.getTaskById(params.id)
+    const { id } = await context.params
+    const task = await taskService.getTaskById(id)
 
     if (!task) {
       return NextResponse.json({ error: "Task not found" }, { status: 404 })
@@ -21,10 +25,14 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 }
 
 // PUT - Update a task
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(
+  request: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
   try {
+    const { id } = await context.params
     const taskData: UpdateTaskDto = await request.json()
-    const task = await taskService.updateTask(params.id, taskData)
+    const task = await taskService.updateTask(id, taskData)
     return NextResponse.json(task)
   } catch (error) {
     console.error("[v0] Error updating task:", error)
@@ -36,9 +44,13 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 }
 
 // PATCH - Toggle task completion
-export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(
+  request: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
   try {
-    const task = await taskService.toggleTaskCompletion(params.id)
+    const { id } = await context.params
+    const task = await taskService.toggleTaskCompletion(id)
     return NextResponse.json(task)
   } catch (error) {
     console.error("[v0] Error toggling task:", error)
@@ -50,9 +62,13 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
 }
 
 // DELETE - Delete a task
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(
+  request: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
   try {
-    await taskService.deleteTask(params.id)
+    const { id } = await context.params
+    await taskService.deleteTask(id)
     return NextResponse.json({ message: "Task deleted successfully" })
   } catch (error) {
     console.error("[v0] Error deleting task:", error)
