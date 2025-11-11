@@ -10,7 +10,7 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
       "position": [
-        -4032,
+        -3840,
         352
       ],
       "id": "55efa75f-cf13-46f5-9a43-ac2a9df162ee",
@@ -94,7 +94,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -3808,
+        -3600,
         352
       ],
       "id": "738fc18e-00e1-4ccd-8f24-3c59bf5d128c",
@@ -234,16 +234,16 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "={{ $json.message }}",
+        "text": "={{ $('normalizando dados e padronizando json').item.json.message }}",
         "options": {
-          "systemMessage": "=Papel do agente\nVocê é um chatbot gerenciador de tarefas, acessado principalmente pelo WhatsApp.\nSeu único objetivo é ajudar o usuário a criar, listar, editar e deletar tarefas usando as tools (webhooks) disponíveis.\nSeja direto, objetivo e sempre dentro do contexto de tarefas.\nVocê NÃO faz small talk extensa, não inventa recursos que não existem e não sai do tema de gerenciamento de tarefas.\n\nFerramentas disponíveis\nVocê terá 4 tools (webhooks) conectadas pelo n8n à aplicação de tarefas:\n\n\nListar tarefas\n\n\nUso: quando o usuário pedir para ver, revisar, conferir ou listar tarefas.\n\n\nEx.: \"Quais são minhas tarefas?\", \"Lista tudo\", \"O que eu tenho pra hoje?\"\n\n\n\n\nCriar tarefa\n\n\nUso: quando o usuário pedir para adicionar ou registrar uma tarefa.\n\n\nDeve enviar para o endpoint:\n\n\ndescrição da tarefa (obrigatório)\n\n\noutros campos, se existirem (ex: data, prioridade), quando o usuário mencionar.\n\n\n\n\nEx.: \"Cria uma tarefa: pagar o aluguel amanhã\", \"Adicionar: ligar para João às 15h\"\n\n\n\n\nEditar tarefa\n\n\nUso: quando o usuário quiser alterar uma tarefa existente.\n\n\nIdentificação da tarefa:\n\n\nPreferir ID, se o usuário informar.\n\n\nSe ele informar apenas o texto (“edita a tarefa pagar cartão para pagar amanhã”), usar o conteúdo para localizar.\n\n\n\n\nPode alterar descrição, data, status ou outros campos conforme suportado.\n\n\nSe houver ambiguidade (ex: várias tarefas com descrições parecidas), pergunte de forma objetiva qual delas ele quer.\n\n\n\n\nDeletar tarefa\n\n\nUso: quando o usuário pedir para remover, excluir ou apagar uma tarefa.\n\n\nIdentificação da tarefa:\n\n\nPreferir ID, se o usuário informar.\n\n\nOu utilizar parte da descrição.\n\n\n\n\nEm caso de ambiguidade, peça confirmação objetiva antes de deletar.\n\n\n\n\n\nComportamento e estilo\n\n\nDireto ao ponto\n\n\nRespostas curtas e claras.\n\n\nSem enrolação, sem floreio.\n\n\nEx.:\n\n\n✅ \"Tarefa criada: pagar boleto amanhã.\"\n\n\n✅ \"Encontrei 3 tarefas parecidas. Qual você quer editar? 1)… 2)… 3)…\"\n\n\n⛔ \"Olá! Espero que você esteja tendo um dia incrível! Vamos lá gerenciar suas tarefas ✨\"\n\n\n\n\n\n\nSempre no contexto\n\n\nSe o usuário perguntar algo fora de tarefas, responda brevemente redirecionando:\n\n\n\"Sou seu assistente de tarefas. Posso criar, listar, editar ou remover tarefas para você.\"\n\n\n\n\n\n\nUso das tools\n\n\nSempre que precisar de dados reais (listar, criar, editar ou deletar), use a tool correspondente.\n\n\nNunca invente tarefas, IDs ou estados. Dependa sempre da resposta dos endpoints.\n\n\nDepois de usar uma tool, resuma o resultado para o usuário de forma clara.\n\n\n\n\nEntendimento de linguagem natural\n\n\nReconheça variações comuns:\n\n\n\"anota pra mim\", \"me lembra de\", \"coloca na lista\", \"apaga essa\", \"muda aquela tarefa\", \"mostra minhas tarefas\".\n\n\n\n\nSe faltar informação mínima para executar (ex.: “edita aquela tarefa”), faça apenas uma pergunta objetiva para completar:\n\n\n\"Qual tarefa você quer editar? Me diga o nome ou ID.\"\n\n\n\n\nNão faça uma sequência longa de perguntas. Seja eficiente.\n\n\n\n\nIdentificação de tarefas\n\n\nQuando listar tarefas, inclua:\n\n\nID (se existir)\n\n\ndescrição\n\n\ninfo relevante (data, status, etc. se o endpoint retornar).\n\n\n\n\nAo editar ou deletar, tente sempre usar:\n\n\nID exato, ou\n\n\ncombinação de descrição + contexto do usuário, e confirme se necessário.\n\n\n\n\n\n\n\nExemplos de comportamento\nUsuário: \"Cria uma tarefa: pagar internet na sexta\"\nAgente: (usa tool de criar tarefa)\nAgente (ao usuário): \"Tarefa criada: pagar internet na sexta.\"\nUsuário: \"Lista todas as minhas tarefas\"\nAgente: (usa tool de listar tarefas)\nAgente (ao usuário):\n\"Suas tarefas atuais são:\n\n\n[ID 12] Pagar internet na sexta\n\n\n[ID 13] Ligar para João\"\n\n\nUsuário: \"Edita a tarefa pagar internet para sábado\"\nAgente:\n\n\nSe encontrar tarefa única correspondente:\n\n\n(usa tool de editar)\n\n\n\"Atualizei: pagar internet para sábado.\"\n\n\n\n\nSe encontrar várias semelhantes:\n\n\n\"Encontrei mais de uma tarefa com nome parecido. Me diga o ID da tarefa que você quer editar.\"\n\n\n\n\nUsuário: \"Apaga a tarefa de ligar para João\"\nAgente:\n\n\nSe encontrar uma única tarefa correspondente:\n\n\n(usa tool de deletar)\n\n\n\"Tarefa 'Ligar para João' deletada.\"\n\n\n\n\nSe houver dúvida:\n\n\n\"Achei mais de uma tarefa parecida. Me informa o ID ou detalhe da tarefa que quer apagar.\"\n\n\n\n\n\nUse sempre esse padrão:\n\n\nEntender a intenção →\n\n\nAcionar a tool correspondente via n8n →\n\n\nResponder de forma curta, clara e focada em tarefas.\n\n"
+          "systemMessage": "=### Papel do agente\n\nVocê é um **chatbot gerenciador de tarefas**, acessado principalmente pelo **WhatsApp**, integrado ao **n8n**.\nSeu **único** objetivo é: **criar, listar, editar e deletar tarefas** usando os webhooks/endpoints disponíveis.\nVocê **não** faz small talk, **não** inventa recursos que não existem e **não** sai do tema de tarefas.\nSempre responda de forma **curta, direta e contextualizada em tarefas**.\n\n---\n\n### Fluxo de autenticação (login obrigatório)\n\n1. Quando a **primeira mensagem** do usuário for `#todoo` (ou quando o usuário ainda não tiver e-mail salvo):\n\n   * Responda com saudação curta.\n   * Peça o **e-mail** do usuário.\n   * Não chame nenhum endpoint antes de ter o e-mail.\n\n2. Quando o usuário enviar o e-mail:\n\n   * Salve em contexto como `userId` ou `user_email`.\n   * A partir daí, todas as chamadas de tarefas **devem** incluir esse `userId` no body ou query.\n   * Quando o usuário enviar o e-mail, chame a tool **Create/Get User**. Pegue o campo **userId** retornado e use esse mesmo `userId` em qualquer chamada seguinte de listar, criar, editar ou deletar.\n\n3. **Enquanto o usuário não enviar o e-mail/login:**\n\n   * Para qualquer pedido de criar/listar/editar/deletar, responda sempre com a frase-padrão (ou variação curta): **\"Antes de continuar, preciso que você me fale o seu e-mail de login para ver suas tarefas.\"**\n   * Não chame tool.\n   * Não faça outras perguntas. Apenas repita o pedido de e-mail.\n\n**Exemplo:**\n\n* Usuário: `#todoo`\n* Agente: `Olá 👋 Sou seu assistente de tarefas. Me diga seu e-mail para acessar suas listas.`\n* Usuário: `lista minhas tarefas`\n* Agente: `Antes de continuar, preciso que você me fale o seu e-mail de login para ver suas tarefas.`\n* Usuário: `joao.silva@email.com`\n* Agente: `Perfeito, João. Agora posso criar, listar, editar e apagar suas tarefas. Pode mandar.`\n\n---\n\n### Ferramentas / Endpoints disponíveis\n\nVocê tem 5 operações principais, todas devem usar o `userId` (e-mail) recebido no login.\n\n#### 0. Login (captura de e-mail)\n\n* Uso: quando ainda não há e-mail no contexto.\n* Ação: apenas armazenar o e-mail e liberar o uso das demais ferramentas.\n* Nunca chamar API aqui.\n* Resposta curta.\n\n---\n\n#### 1. Listar tarefas (WhatsApp formatado)\n\n* Quando o usuário pedir para **ver, revisar, conferir, mostrar, listar** tarefas.\n* Endpoint sugerido: `GET /api/tasks/formatted?userId={userId}`\n* Resposta esperada da API (exemplo): `message: \"📋 *Your Tasks* (3): ...\"`\n* **IMPORTANTE:** Preserve todos os **EMOJIS e símbolos** que vierem do endpoint (✅, ⬜, 📋, números, etc.), pois eles indicam status das tarefas. **Nunca remova ou troque esses emojis.**\n* O agente deve apenas **repassar de forma limpa**: \"Suas tarefas são: …\"\n* Se não houver tarefa: \"Você não tem tarefas no momento.\"\n\n**Gatilhos**: \"quais são minhas tarefas\", \"lista\", \"mostra tudo\", \"o que eu tenho pra hoje\".\n\n---\n\n#### 2. Criar tarefa (tool: **Criar Tarefa**)\n\n* Use quando o usuário pedir para **criar, adicionar, anotar, registrar**.\n* Chame o node/tool de criação com:\n\n  ```json\n  {\n    \"userId\": \"{{ $('normalizando dados e padronizando json').item.json.userId }}\",\n    \"title\": \"texto que o usuário pediu\",\n    \"description\": \"opcional, se o usuário deu mais detalhes\"\n  }\n  ```\n* Depois que a tool responder, diga algo curto: **\"Tarefa criada: ...\"**.\n\n---\n\n#### 3. Editar tarefa\n\nHá **2 tools** e o agente deve escolher uma:\n\n**a) Atualizar por índice** (`PUT /api/tasks/by-index`)\n\n* Use quando o usuário disser: \"editar 1...\", \"concluir 2\", \"marca a 3 como feita\".\n* Sempre envie:\n\n  ```json\n  {\n    \"userId\": \"{{ $('normalizando dados e padronizando json').item.json.userId }}\",\n    \"index\": 1,\n    \"title\": \"opcional\",\n    \"description\": \"opcional\",\n    \"completed\": true/false\n  }\n  ```\n* Responda: **\"Tarefa 1 atualizada.\"** ou **\"Tarefa 2 concluída.\"**\n\n**b) Atualizar por título** (`PUT /api/tasks/by-title`)\n\n* Use quando o usuário disser: \"marca 'comprar leite' como feita\", \"edita a tarefa pagar internet pra sábado\".\n* Sempre envie:\n\n  ```json\n  {\n    \"userId\": \"{{ $('normalizando dados e padronizando json').item.json.userId }}\",\n    \"title\": \"título que o usuário falou\",\n    \"description\": \"opcional\",\n    \"completed\": true/false\n  }\n  ```\n* Responda: **\"Atualizei: comprar leite.\"**\n\n---\n\n#### 4. Deletar tarefa\n\nTambém são **2 tools**:\n\n**a) Deletar por índice** (`DELETE /api/tasks/by-index?userId=...&index=...`)\n\n* Use quando o usuário disser: \"apaga a 2\", \"deleta 3\".\n* Responda: **\"Tarefa 2 apagada.\"**\n\n**b) Deletar por título** (`DELETE /api/tasks/by-title?userId=...&title=...`)\n\n* Use quando o usuário disser: \"apaga a de comprar leite\".\n* Responda: **\"Tarefa 'comprar leite' apagada.\"**\n\n---\n\n### Escolha de tool\n\n* Se o usuário pedir para **criar tarefa** → use a tool **Criar Tarefa**.\n* Se ele se referir a uma tarefa por **número (1, 2, 3...)** → use a versão **por índice** (atualizar ou deletar).\n* Se ele se referir **pelo nome** → use a versão **por título** (atualizar ou deletar).\n* **Sempre** envie o `userId` que já está no contexto (veio do Create/Get User ou do nó de normalização).\n* Depois que a tool responder, envie uma frase curta de confirmação.\n\n---\n\n### Entendimento de linguagem natural\n\n* Reconheça variações: \"anota pra mim\", \"coloca na lista\", \"me lembra de\", \"apaga essa\", \"muda aquela tarefa\", \"concluir 1\", \"done 1\".\n* Tudo deve ser mapeado para: **criar / listar / editar / deletar**.\n* Se não houver e-mail → repetir a frase-padrão de pedido de e-mail.\n\n---\n\n### Regras de comportamento\n\n1. **Direto ao ponto** — nada de mensagens longas de boas-vindas.\n2. **Sempre no contexto de tarefas** — se o assunto fugir, volte para: \"Sou seu assistente de tarefas...\".\n3. **Sempre usar tool** quando precisar de dado real.\n4. **Depois de usar a tool, resumir** com 1 frase.\n5. **Usar o e-mail (userId) em todas as chamadas.**\n6. **Ao repassar texto do `/api/tasks/formatted` preserve os emojis.**\n\n---\n\n### Mapeamento rápido\n\n* `lista`, `listar`, `minhas tarefas` → GET /api/tasks/formatted?userId={userId}\n* `adicionar ...`, `criar ...`, `anota ...` → POST /api/tasks\n* `concluir 1` → PUT /api/tasks/by-index { completed: true }\n* `concluir comprar leite` → PUT /api/tasks/by-title { completed: true }\n* `editar 1 ...` → PUT /api/tasks/by-index\n* `editar comprar leite ...` → PUT /api/tasks/by-title\n* `deletar 1`, `apagar 1` → DELETE /api/tasks/by-index\n* `deletar comprar leite` → DELETE /api/tasks/by-title\n* `#todoo` → pedir e-mail e repetir até o e-mail chegar\n"
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2,
       "position": [
-        1696,
-        464
+        3072,
+        480
       ],
       "id": "237f01ed-9527-4602-84ed-b9fdf73b002c",
       "name": "AI Agent"
@@ -262,8 +262,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
       "position": [
-        1520,
-        704
+        2896,
+        640
       ],
       "id": "3cb12646-a523-41b0-9400-0c22ce1157f3",
       "name": "GPT 4.1 MINI",
@@ -283,8 +283,8 @@
       "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
       "typeVersion": 1.3,
       "position": [
-        1792,
-        144
+        3136,
+        128
       ],
       "id": "c4c7522f-51a1-48f3-9458-24267f531ab1",
       "name": "Postgres Chat Memory",
@@ -308,8 +308,8 @@
       "type": "n8n-nodes-waha.WAHA",
       "typeVersion": 202411,
       "position": [
-        2848,
-        224
+        4048,
+        240
       ],
       "id": "1fc1c48c-69f4-4d8a-a1a4-49ffee154964",
       "name": "Visualizar",
@@ -331,8 +331,8 @@
       "type": "n8n-nodes-waha.WAHA",
       "typeVersion": 202411,
       "position": [
-        3680,
-        480
+        4720,
+        496
       ],
       "id": "38d9d73e-68ab-4bac-8543-604eeee02304",
       "name": "Digitar",
@@ -350,8 +350,8 @@
       "type": "n8n-nodes-base.wait",
       "typeVersion": 1.1,
       "position": [
-        3888,
-        480
+        4928,
+        496
       ],
       "id": "825e18d2-8f4d-4449-82e9-3eed4ec79246",
       "name": "Esperar 3 Segundos",
@@ -369,8 +369,8 @@
       "type": "n8n-nodes-waha.WAHA",
       "typeVersion": 202411,
       "position": [
-        4112,
-        480
+        5152,
+        496
       ],
       "id": "e95563fe-202c-4c79-943a-aeb5abd0da5b",
       "name": "Responder",
@@ -847,8 +847,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1408,
-        480
+        1424,
+        464
       ],
       "id": "7a4c376a-e0fb-4adb-ba81-45d9333d251a",
       "name": "Mensagem final"
@@ -866,8 +866,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
       "position": [
-        2336,
-        704
+        3648,
+        640
       ],
       "id": "501cd739-ba98-49df-bf28-acb112419bae",
       "name": "OpenAI Chat Model",
@@ -886,7 +886,7 @@
         "messages": {
           "messageValues": [
             {
-              "message": "=Por favor, gere a saída no seguinte formato JSON:\n{\n  \"messages\": [\n    \"splitedMessage\",\n    \"splitedMessage\",\n    \"splitedMessage\"\n  ]\n}\n\n### Certifique-se de que a resposta siga exatamente essa estrutura, incluindo os colchetes e as aspas.\n\n### As mensagens devem ser divididas de forma humanizada e legíveis para Whatsapp.\n\n### Nunca altere o texto original, remova as notações markdown quando presentes, deixando apenas texto simples com pontuações e acentuação das palavras.\n\n### Jamais separe uma mensagem vazia.\n\n### Use apenas texto simples, sem MARKDOWN, se existir markdown no texto original, altere para remover o markdown apenas.\n\n### Envie links em texto simples, na seguinte formatação de exemplo:\nhttps://{url}\n\n### O máximo de mensagens divididas é 4. Nunca deve existir mais do que 4 mensagens dentro do array \"messages\".\n\n### Nunca invente informação, apenas divida o texto original.\n\n### O texto final deve ser o texto original divido em mensagens menores (quando necessário).\n\n### Caso a mensagem já for curta, deixe o array com apenas uma mensagem.\n\n### Nunca invente nenhum link, nem altere a mensagem original, de forma alguma. É proíbido alterar a mensagem original, a não ser que seja para remover markdown do texto e ajustar links.\n\n### A resposta deve conter **apenas o JSON**, sem comentários, sem texto fora do objeto.\n\n### A chave principal deve ser `\"messages\"` no nível mais alto da estrutura.\n\n### O tipo de dado de cada item do array **deve ser string** e conter apenas texto direto (sem objetos ou aninhamentos).\n\n### O modelo deve garantir que a estrutura seja válida em JSON e compatível com um `Structured Output Parser`.\n"
+              "message": "=Formate e separe a seguinte mensagem:\n\n{{ $('AI Agent').item.json.output }}\n\nPor favor, gere a saída no seguinte formato JSON:\n{\n  \"messages\": [\n    \"splittedMessage\",\n    \"splittedMessage\"\n  ]\n}\n\nRegras:\n\n1. Preserve todos os EMOJIS e símbolos que já vierem no texto original (como ✅, ⬜, 📋), pois eles indicam status das tarefas.\n2. NÃO reescreva o conteúdo das tarefas. Não invente textos, não traduza, não reordene.\n3. Você pode remover apenas marcação de negrito/itálico em markdown (`*assim*`, `_assim_`) se isso estiver atrapalhando a leitura, mas mantenha o texto e os emojis.\n4. Divida o texto original por mensagens, de forma legível para WhatsApp.\n5. Se o texto já for curto, devolva só 1 mensagem no array.\n6. A resposta deve conter **apenas** o JSON válido, exatamente com a chave \"messages\" na raiz.\n7. Cada item do array deve ser uma string simples.\n8. Não altere links, se existirem.\n\nExemplo de saída:\n{\n  \"messages\": [\n    \"📋 Suas tarefas (3):\",\n    \"1. ⬜ buy a coffee ...\",\n    \"2. ⬜ comprar roupa de ano novo branca\",\n    \"3. ✅ teste ...\"\n  ]\n}\n"
             }
           ]
         },
@@ -895,8 +895,8 @@
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
       "typeVersion": 1.7,
       "position": [
-        2368,
-        464
+        3648,
+        480
       ],
       "id": "15c75797-446a-4d7b-8bf5-3529211ac670",
       "name": "Output Parser1"
@@ -911,8 +911,8 @@
       "type": "n8n-nodes-base.splitOut",
       "typeVersion": 1,
       "position": [
-        2768,
-        464
+        4000,
+        480
       ],
       "id": "7bb15b83-050d-415e-9ea5-fc134b9749f8",
       "name": "Split Out"
@@ -924,8 +924,8 @@
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        3376,
-        464
+        4416,
+        480
       ],
       "id": "f4fdd8e7-b501-41be-9f99-7a4fc2d3ddb0",
       "name": "Loop Over Items"
@@ -951,8 +951,8 @@
       "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
       "typeVersion": 1.2,
       "position": [
-        2560,
-        704
+        3824,
+        640
       ],
       "id": "19796fed-0cb8-4b65-9006-46803dedb6e6",
       "name": "Structured Output Parser"
@@ -964,8 +964,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3040,
-        464
+        4192,
+        480
       ],
       "id": "c82c3ec0-69f2-42e3-bffe-074697d9eec1",
       "name": "Remover mensagens duplicadas do agente"
@@ -975,8 +975,8 @@
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
       "position": [
-        2368,
-        208
+        3712,
+        224
       ],
       "id": "34b01e85-0f87-4883-8c38-10d0a61d709b",
       "name": "No Operation, do nothing"
@@ -1008,8 +1008,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        2048,
-        464
+        3392,
+        480
       ],
       "id": "d0a4c437-acaf-433d-adb1-6980ff3e5fdf",
       "name": "Ultima Mensagem?"
@@ -1152,6 +1152,30 @@
     },
     {
       "parameters": {
+        "toolDescription": "chamar o endpoint já formatado pro WhatsApp.",
+        "url": "https://8-figure-agency.vercel.app/api/tasks/formatted",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "={{ $('normalizando dados e padronizando json').item.json.userId }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        2896,
+        880
+      ],
+      "id": "a4bf2153-94c5-440d-b949-4f12532424de",
+      "name": "Listar Tarefas"
+    },
+    {
+      "parameters": {
         "conditions": {
           "options": {
             "caseSensitive": true,
@@ -1161,13 +1185,13 @@
           },
           "conditions": [
             {
-              "id": "3c72817c-7ae5-45e9-baf5-4b34bad463d6",
-              "leftValue": "",
+              "id": "8f2de595-8ac2-4d38-b60c-4f8259d3d62b",
+              "leftValue": "={{ $('normalizando dados e padronizando json').item.json.userId }}",
               "rightValue": "",
               "operator": {
                 "type": "string",
-                "operation": "equals",
-                "name": "filter.operator.equals"
+                "operation": "notEmpty",
+                "singleValue": true
               }
             }
           ],
@@ -1178,11 +1202,362 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        -3600,
-        352
+        2048,
+        464
       ],
-      "id": "0e625448-ba3b-4aa5-b747-9e0da9e6e864",
-      "name": "isTheSameNumber?"
+      "id": "adcdeb8f-899b-4373-a0e0-a94d6cf6924a",
+      "name": "Usuário existe?"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "propertyName": "userId",
+        "key": "={{ $('Dados').item.json.phone }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        1616,
+        464
+      ],
+      "id": "0d266df8-d8eb-454b-a080-f63348f9c32f",
+      "name": "GetReddisUser",
+      "credentials": {
+        "redis": {
+          "id": "xe1OYB5NOZcwVVAB",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "4acc5bff-9a50-4b06-a5e0-b9adb8903f15",
+              "leftValue": "={{ $('Mensagem final').item.json.message }}",
+              "rightValue": "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$",
+              "operator": {
+                "type": "string",
+                "operation": "regex"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2256,
+        544
+      ],
+      "id": "61b8fdb1-5401-4596-89ad-4776d368e72e",
+      "name": "Essa mensagem é um Email?"
+    },
+    {
+      "parameters": {
+        "operation": "set",
+        "key": "={{ $('Dados').item.json.phone }}",
+        "value": "={{ JSON.stringify({ userId: $json.id, email: $json.email }) }}"
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        2656,
+        320
+      ],
+      "id": "7ea8794e-1901-47fa-a869-d48c3b19f38d",
+      "name": "Redis",
+      "credentials": {
+        "redis": {
+          "id": "xe1OYB5NOZcwVVAB",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "key": "558183772043@c.us"
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        1872,
+        224
+      ],
+      "id": "b8ed6a70-5804-4103-b294-5e1bb87bfdf9",
+      "name": "Redis1",
+      "credentials": {
+        "redis": {
+          "id": "xe1OYB5NOZcwVVAB",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "key": "558183772043@c.us",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        1664,
+        240
+      ],
+      "id": "7c55720f-13f2-42ad-9f21-af8dd17dd339",
+      "name": "Redis2",
+      "credentials": {
+        "redis": {
+          "id": "xe1OYB5NOZcwVVAB",
+          "name": "Redis account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1110bcf7-cbb3-4500-a30c-ace61ab1a1bd",
+              "name": "id",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "21251dca-7cbb-408f-be6d-64867e2d1d13",
+              "name": "email",
+              "value": "={{ $json.email }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2832,
+        336
+      ],
+      "id": "24afaad4-9fb5-4401-80cc-edb4e9486a70",
+      "name": "Normalizar dados"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d970719e-7376-4b88-9aed-1f7d8f5953cf",
+              "name": "userId",
+              "value": "={{ JSON.parse($json.userId).userId }}",
+              "type": "string"
+            },
+            {
+              "id": "3f155522-5897-41c0-a661-a402ba8fd18e",
+              "name": "email",
+              "value": "={{ JSON.parse($json.userId).email }}",
+              "type": "string"
+            },
+            {
+              "id": "9accf1d8-62a5-4d2f-9085-3bff29b43b4d",
+              "name": "message",
+              "value": "={{ $('Mensagem final').item.json.message }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1824,
+        464
+      ],
+      "id": "02c93dbe-512e-4a00-ae4a-27c32b804ce3",
+      "name": "normalizando dados e padronizando json"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://8-figure-agency.vercel.app/api/users",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "=Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"email\": \"luizhlimagomes28@gmail.com\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2480,
+        320
+      ],
+      "id": "805658de-6054-4ea0-8271-94277574d82c",
+      "name": "Login"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Cria uma nova tarefa para o usuário autenticado.\nSempre envie userId que já está no contexto.\nCampo obrigatório: title.\nSe o usuário falar só “cria tarefa pagar aluguel”, use isso como title.\nSe o usuário der mais detalhes, coloque no description.\n\n",
+        "method": "POST",
+        "url": "https://8-figure-agency.vercel.app/api/tasks",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"userId\": \"{{ $('normalizando dados e padronizando json').item.json.userId }}\",\n  \"title\": \"{{ (() => {\n  // tenta pegar o texto bruto que o agente mandou\n  const raw =\n    $json.output ??\n    $json.message ??\n    $json.text ??\n    $json.title ??\n    '';\n\n  // se não tiver nada mesmo, devolve vazio\n  if (!raw) return '';\n\n  // tenta ver se é um JSON string\n  try {\n    const obj = JSON.parse(raw);\n    // se tiver title no JSON, usa\n    if (obj.title) return obj.title;\n    // se não tiver, mas tem message, usa\n    if (obj.message) return obj.message;\n    return raw;\n  } catch (e) {\n    // não era JSON, usa o texto direto\n    return raw;\n  }\n})() }}\",\n  \"description\": \"{{ (() => { try { return JSON.parse($json.output).description || '' } catch (e) { return '' } })() }}\"\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        3040,
+        832
+      ],
+      "id": "017af7e8-62a4-4433-9c1a-891e3c2e87e6",
+      "name": "Create Task"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Atualiza uma tarefa pela posição da lista (1, 2, 3...).\nUse este endpoint quando o usuário disser algo como “editar 1…”, “muda a 2 pra concluída”, “concluir 3”.\nSempre envie userId.\nSe o usuário só quiser marcar como feita, envie \"completed\": true.\nSe ele disser “marcar 2 como pendente”, envie \"completed\": false.",
+        "method": "PUT",
+        "url": "https://8-figure-agency.vercel.app/api/tasks/by-index",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"userId\": \"{{ $('normalizando dados e padronizando json').item.json.userId }}\",\n  \"index\": {{ (() => {\n    const raw = $json.output ?? $json.message ?? $json.text ?? '';\n    // 1) tenta JSON\n    try {\n      const o = JSON.parse(raw);\n      if (o.index) return Number(o.index);\n    } catch (e) {}\n    // 2) tenta achar número no texto\n    const m = String(raw).match(/\\b(\\d+)\\b/);\n    return m ? Number(m[1]) : 1;\n  })() }},\n  \"title\": \"{{ (() => {\n    const raw = $json.output ?? $json.message ?? $json.text ?? '';\n    if (!raw) return '';\n    try {\n      const o = JSON.parse(raw);\n      if (o.title) return o.title;\n      if (o.message) return o.message;\n      return raw;\n    } catch (e) {\n      return raw;\n    }\n  })() }}\",\n  \"description\": \"{{ (() => {\n    const raw = $json.output ?? $json.message ?? $json.text ?? '';\n    if (!raw) return '';\n    try {\n      const o = JSON.parse(raw);\n      return o.description || '';\n    } catch (e) {\n      return '';\n    }\n  })() }}\",\n  \"completed\": {{ (() => {\n    const raw = $json.output ?? $json.message ?? $json.text ?? '';\n    // se vier JSON com completed\n    try {\n      const o = JSON.parse(raw);\n      if (typeof o.completed === 'boolean') return o.completed;\n    } catch (e) {}\n    // se no texto tiver \"concluir\", \"feito\", \"done\" -> true\n    const txt = String(raw).toLowerCase();\n    if (txt.includes('concluir') || txt.includes('feito') || txt.includes('done')) return true;\n    return false;\n  })() }}\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        3168,
+        896
+      ],
+      "id": "7e86bdd4-c180-49d4-ae1a-31e5f381bb0a",
+      "name": "Edit / Update"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Atualiza uma tarefa pelo nome/título.\nUse quando o usuário disser “marca ‘comprar leite’ como feita”, “edita a tarefa pagar internet pra sábado”.\nSempre envie userId.\nSe o usuário só quiser concluir, envie \"completed\": true.\nSe ele mudar o texto, envie em description.",
+        "method": "PUT",
+        "url": "https://8-figure-agency.vercel.app/api/tasks/by-title",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"userId\": \"{{ $('normalizando dados e padronizando json').item.json.userId }}\",\n  \"title\": \"{{ (() => {\n    const raw = $json.output ?? $json.message ?? $json.text ?? '';\n    if (!raw) return '';\n    try {\n      const o = JSON.parse(raw);\n      if (o.title) return o.title;\n      return raw;\n    } catch (e) {\n      return raw;\n    }\n  })() }}\",\n  \"description\": \"{{ (() => {\n    const raw = $json.output ?? $json.message ?? $json.text ?? '';\n    if (!raw) return '';\n    try {\n      const o = JSON.parse(raw);\n      return o.description || '';\n    } catch (e) {\n      return '';\n    }\n  })() }}\",\n  \"completed\": {{ (() => {\n    const raw = $json.output ?? $json.message ?? $json.text ?? '';\n    try {\n      const o = JSON.parse(raw);\n      if (typeof o.completed === 'boolean') return o.completed;\n    } catch (e) {}\n    const txt = String(raw).toLowerCase();\n    if (txt.includes('concluir') || txt.includes('feito') || txt.includes('done')) return true;\n    return false;\n  })() }}\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        3328,
+        848
+      ],
+      "id": "f0a73bd4-8d5e-42d4-bcd4-b7874f7ab33f",
+      "name": "Update by Title"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Remove uma tarefa pela posição dela na lista.\nUse quando o usuário disser “apaga a 2”, “deleta 3”.\nSempre mande userId e index.",
+        "method": "DELETE",
+        "url": "https://8-figure-agency.vercel.app/api/tasks/by-index",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "={{ $('normalizando dados e padronizando json').item.json.userId }}\n"
+            },
+            {
+              "name": "index",
+              "value": "={{ (() => {\n  const raw = $json.output ?? $json.message ?? $json.text ?? '';\n  try {\n    const o = JSON.parse(raw);\n    if (o.index) return o.index;\n  } catch (e) {}\n  const m = String(raw).match(/\\b(\\d+)\\b/);\n  return m ? m[1] : 1;\n})() }}\n"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        3472,
+        912
+      ],
+      "id": "3d9572da-d995-4676-85da-a2575c129b75",
+      "name": "Delete"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Remove uma tarefa pelo nome.\nUse quando o usuário disser “apaga a de comprar leite”, “deleta ligar para João”.\nSempre mande userId e o title que o usuário falou.",
+        "method": "DELETE",
+        "url": "https://8-figure-agency.vercel.app/api/tasks/by-title",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "={{ $('normalizando dados e padronizando json').item.json.userId }}\n"
+            },
+            {
+              "name": "title",
+              "value": "={{ (() => {\n  const raw = $json.output ?? $json.message ?? $json.text ?? '';\n  if (!raw) return '';\n  try {\n    const o = JSON.parse(raw);\n    if (o.title) return o.title;\n    return raw;\n  } catch (e) {\n    return raw;\n  }\n})() }}\n"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        3616,
+        880
+      ],
+      "id": "ab7b5f09-68dc-4c13-bfae-72a3f90b00e7",
+      "name": "Delete by Title"
     }
   ],
   "pinData": {},
@@ -1202,7 +1577,7 @@
       "main": [
         [
           {
-            "node": "isTheSameNumber?",
+            "node": "Ignorar API",
             "type": "main",
             "index": 0
           }
@@ -1266,17 +1641,17 @@
       "ai_memory": [
         [
           {
-            "node": "AI Agent",
-            "type": "ai_memory",
-            "index": 0
-          },
-          {
             "node": "Inserir mensagem do atendente",
             "type": "ai_memory",
             "index": 0
           },
           {
             "node": "Inserir mensagem do cliente",
+            "type": "ai_memory",
+            "index": 0
+          },
+          {
+            "node": "AI Agent",
             "type": "ai_memory",
             "index": 0
           }
@@ -1510,7 +1885,7 @@
       "main": [
         [
           {
-            "node": "AI Agent",
+            "node": "GetReddisUser",
             "type": "main",
             "index": 0
           }
@@ -1687,12 +2062,158 @@
         ]
       ]
     },
-    "isTheSameNumber?": {
+    "Listar Tarefas": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Usuário existe?": {
       "main": [
         [
           {
-            "node": "Ignorar API",
+            "node": "AI Agent",
             "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Essa mensagem é um Email?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GetReddisUser": {
+      "main": [
+        [
+          {
+            "node": "normalizando dados e padronizando json",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Essa mensagem é um Email?": {
+      "main": [
+        [
+          {
+            "node": "Login",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Redis": {
+      "main": [
+        [
+          {
+            "node": "Normalizar dados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalizar dados": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "normalizando dados e padronizando json": {
+      "main": [
+        [
+          {
+            "node": "Usuário existe?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Login": {
+      "main": [
+        [
+          {
+            "node": "Redis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Task": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit / Update": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update by Title": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete by Title": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
             "index": 0
           }
         ]
@@ -1703,7 +2224,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "f5070a7b-e2a4-4a22-bf1a-d97619567b87",
+  "versionId": "7d07e820-e798-499a-b4e8-ef4fe1ab8a9f",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "92edcd34644deb24b8d793def5fd08ce4a89ec3cdad4e6fe6071ff4c82b9e4c2"
